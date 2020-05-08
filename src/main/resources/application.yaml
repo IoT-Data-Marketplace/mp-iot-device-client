@@ -1,0 +1,5 @@
+services:
+  platform:
+    endpoint: ${MP.IOT.DEVICE.CLIENT.PLATFORM.ENDPOINT}
+  sensor:
+    id: ${MP.IOT.DEVICE.CLIENT.SENSOR.ID}
