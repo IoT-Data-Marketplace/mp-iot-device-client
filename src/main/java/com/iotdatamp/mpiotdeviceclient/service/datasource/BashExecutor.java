@@ -19,7 +19,6 @@ public class BashExecutor {
 
     public String executeBashCommand(String command) {
         String result = "";
-        log.info("Executing BASH command:\n   " + command);
         Runtime r = Runtime.getRuntime();
         String[] commands = {"bash", "-c", command};
         try {

@@ -21,7 +21,6 @@ Docker Compose Setup
 ```
 docker run \
 --privileged \
---env MP_IOT_DEVICE_CLIENT_PLATFORM_ENDPOINT="https://iot-data-mp.com/graphql" \
 --env MP_IOT_DEVICE_CLIENT_SENSOR_ID="<SENSOR_CONTRACT_ADDRESS>" \
-docker.pkg.github.com/iot-data-marketplace/mp-iot-device-client/mp-iot-device-client:latest
+ddanijeld/mp-iot-device-client:latest
 ```

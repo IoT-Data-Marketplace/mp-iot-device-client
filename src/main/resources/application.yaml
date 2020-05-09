@@ -1,5 +1,5 @@
 services:
   platform:
-    endpoint: ${MP.IOT.DEVICE.CLIENT.PLATFORM.ENDPOINT}
+    endpoint: https://iot-data-mp.com/graphql
   sensor:
     id: ${MP.IOT.DEVICE.CLIENT.SENSOR.ID}
