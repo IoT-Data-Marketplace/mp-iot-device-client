@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.iotdatamp.mpiotdeviceclient.config.PropertiesBean;
 import com.iotdatamp.mpiotdeviceclient.dto.NewMessagesDTO;
+import com.iotdatamp.mpiotdeviceclient.service.datasource.BashExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 
 @Slf4j
 @Service
@@ -18,16 +21,29 @@ import java.util.Arrays;
 public class MessageService {
 
     private final PropertiesBean properties;
+    private final BashExecutor bashExecutor;
     ObjectMapper mapper = new ObjectMapper();
 
     public void pushMessages() {
         while (true) {
             try {
-                NewMessagesDTO newMessagesDTO = NewMessagesDTO.builder().records(Arrays.asList(NewMessagesDTO.Record.builder().key("TODO").value("TODO").build())).build();
+                // todo this is just for testing
+                String bashCommand = "vcgencmd measure_temp";
+
+                Date date = new Date();
+                String temperature = bashExecutor.executeBashCommand(bashCommand).replace("temp=", "").replace("'C", "");
+
+                NewMessagesDTO.Record record = NewMessagesDTO.Record.builder()
+                        .key(new Timestamp(date.getTime()).toString())
+                        .value(temperature)
+                        .build();
+                NewMessagesDTO newMessagesDTO = NewMessagesDTO.builder().records(Arrays.asList(record)).build();
+                String graphQlQuery = createGraphQlQuery(newMessagesDTO);
+                log.info("Submitting the request, graphQlQuery: \n".concat(graphQlQuery));
                 OkHttpClient client = new OkHttpClient().newBuilder()
                         .build();
                 MediaType mediaType = MediaType.parse("application/json");
-                String jsonQuery = createJsonQuery(createGraphQlQuery(newMessagesDTO), mapper.createObjectNode());
+                String jsonQuery = createJsonQuery(graphQlQuery, mapper.createObjectNode());
                 RequestBody body = RequestBody.create(mediaType, jsonQuery);
                 Request request = new Request.Builder()
                         .url(properties.getPlatformEndpoint())
@@ -35,8 +51,8 @@ public class MessageService {
                         .addHeader("Content-Type", "application/json")
                         .build();
                 Response response = client.newCall(request).execute();
-                System.out.println(response.body().string());
-                Thread.sleep(10);
+                log.debug(response.body().string());
+                Thread.sleep(100);
             } catch (Exception e) {
                 log.error(e.getMessage());
                 continue;
