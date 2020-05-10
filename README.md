@@ -22,5 +22,6 @@ Docker Compose Setup
 docker run \
 --privileged \
 --env MP_IOT_DEVICE_CLIENT_SENSOR_ID="<SENSOR_CONTRACT_ADDRESS>" \
+--restart=always \
 ddanijeld/mp-iot-device-client:latest
 ```

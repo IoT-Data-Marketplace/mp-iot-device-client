@@ -29,7 +29,6 @@ public class BashExecutor {
             String line = "";
 
             while ((line = b.readLine()) != null) {
-                System.out.println(line);
                 result = line;
             }
 
@@ -38,6 +37,7 @@ public class BashExecutor {
             log.error("Failed to execute bash with command: " + command);
             e.printStackTrace();
         }
+        log.debug("Bash executor is returning result: " + result);
         return result;
     }
 

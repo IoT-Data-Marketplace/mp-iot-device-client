@@ -31,7 +31,12 @@ public class MessageService {
                 String bashCommand = "vcgencmd measure_temp";
 
                 Date date = new Date();
-                String temperature = bashExecutor.executeBashCommand(bashCommand).replace("temp=", "").replace("'C", "");
+
+                String tempResult = bashExecutor.executeBashCommand(bashCommand);
+
+                if (tempResult.equals("")) throw new Exception("Bash executor didn't return any result.".concat("\nResult: ").concat(tempResult));
+
+                String temperature = tempResult.replace("temp=", "").replace("'", "");
 
                 NewMessagesDTO.Record record = NewMessagesDTO.Record.builder()
                         .key(new Timestamp(date.getTime()).toString())
