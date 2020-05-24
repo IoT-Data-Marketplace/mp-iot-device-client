@@ -22,6 +22,7 @@ public class MessageService {
 
     private final PropertiesBean properties;
     private final BashExecutor bashExecutor;
+    private final EncryptionService encryptionService;
     ObjectMapper mapper = new ObjectMapper();
 
     public void pushMessages() {
@@ -37,14 +38,15 @@ public class MessageService {
                 if (tempResult.equals("")) throw new Exception("Bash executor didn't return any result.".concat("\nResult: ").concat(tempResult));
 
                 String temperature = tempResult.replace("temp=", "").replace("'", "");
+                String temperatureEncrypted = encryptionService.encrypt(temperature);
 
                 NewMessagesDTO.Record record = NewMessagesDTO.Record.builder()
                         .key(new Timestamp(date.getTime()).toString())
-                        .value(temperature)
+                        .value(temperatureEncrypted)
                         .build();
                 NewMessagesDTO newMessagesDTO = NewMessagesDTO.builder().records(Arrays.asList(record)).build();
                 String graphQlQuery = createGraphQlQuery(newMessagesDTO);
-                log.debug("Submitting the request, graphQlQuery: \n".concat(graphQlQuery));
+                log.info("Submitting the request, graphQlQuery: \n".concat(graphQlQuery));
                 OkHttpClient client = new OkHttpClient().newBuilder()
                         .build();
                 MediaType mediaType = MediaType.parse("application/json");
@@ -56,7 +58,7 @@ public class MessageService {
                         .addHeader("Content-Type", "application/json")
                         .build();
                 Response response = client.newCall(request).execute();
-                log.debug(response.body().string());
+                log.info(response.body().string());
                 Thread.sleep(100);
             } catch (Exception e) {
                 log.error(e.getMessage());
