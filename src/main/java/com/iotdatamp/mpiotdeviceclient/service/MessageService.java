@@ -46,7 +46,7 @@ public class MessageService {
                         .build();
                 NewMessagesDTO newMessagesDTO = NewMessagesDTO.builder().records(Arrays.asList(record)).build();
                 String graphQlQuery = createGraphQlQuery(newMessagesDTO);
-                log.info("Submitting the request, graphQlQuery: \n".concat(graphQlQuery));
+                log.debug("Submitting the request, graphQlQuery: \n".concat(graphQlQuery));
                 OkHttpClient client = new OkHttpClient().newBuilder()
                         .build();
                 MediaType mediaType = MediaType.parse("application/json");
@@ -56,9 +56,10 @@ public class MessageService {
                         .url(properties.getPlatformEndpoint())
                         .method("POST", body)
                         .addHeader("Content-Type", "application/json")
+                        .addHeader("Authorization", "Bearer ".concat(properties.getJwt()))
                         .build();
                 Response response = client.newCall(request).execute();
-                log.info(response.body().string());
+                log.info("Submitted request, with payload value: ".concat(temperature).concat("\nResponse code: ".concat(String.valueOf(response.code()))));
                 Thread.sleep(100);
             } catch (Exception e) {
                 log.error(e.getMessage());

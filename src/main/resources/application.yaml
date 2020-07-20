@@ -3,5 +3,6 @@ services:
     endpoint: https://iot-data-mp.com/graphql
   sensor:
     id: ${MP.IOT.DEVICE.CLIENT.SENSOR.ID}
+    jwt: ${MP.IOT.DEVICE.CLIENT.JWT}
   encryption:
     key: ${MP.IOT.ENCRYPTION.AES.KEY}

@@ -14,6 +14,9 @@ public class PropertiesBean {
     @Value("${services.sensor.id}")
     private String sensorID;
 
+    @Value("${services.sensor.jwt}")
+    private String jwt;
+
     @Value("${services.encryption.key}")
     private String encryptionKey;
 
