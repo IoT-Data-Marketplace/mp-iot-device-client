@@ -25,3 +25,8 @@ docker run \
 --restart=always \
 ddanijeld/mp-iot-device-client:latest
 ```
+
+
+## Important
+- parametrize the command
+- docker image just for ARM

@@ -59,7 +59,7 @@ public class MessageService {
                         .addHeader("Authorization", "Bearer ".concat(properties.getJwt()))
                         .build();
                 Response response = client.newCall(request).execute();
-                log.info("Submitted request, with payload value: ".concat(temperature).concat("\nResponse code: ".concat(String.valueOf(response.code()))));
+                log.info("Submitted request, with payload value: ".concat(temperature).concat("\nResponse body: ".concat(response.body().string())));
                 Thread.sleep(100);
             } catch (Exception e) {
                 log.error(e.getMessage());
